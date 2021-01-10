@@ -78,13 +78,6 @@ class SudokuSolver:
         # cv2.floodFill(img, mask, (0, 0), 0)
         return dst
 
-    def __adjustBrightness(self, img, gamma=1.5):
-        invGamma = 1.0 / gamma
-        table = np.array([
-            ((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)
-        ],np.uint8)
-        return cv2.LUT(img, table)
-
     def __displayBoxes(self, boxes):
         """
         :param boxes: numpy array of 81 boxes
@@ -95,7 +88,7 @@ class SudokuSolver:
                 box = boxes[i * 9 + j]
                 plt.imshow(box, 'gray')
                 plt.xticks([]), plt.yticks([])
-                cv2.imwrite(f"F:/pycharm/LearnAI/assets/images/sudoku/sudoku0/box{i*9+j}.jpg",boxes[i * 9 + j])
+                cv2.imwrite(f"F:/pycharm/LearnAI/assets/images/sudoku/sudoku0/box{i * 9 + j}.jpg", boxes[i * 9 + j])
 
         plt.show()
 
@@ -134,8 +127,8 @@ class SudokuSolver:
     def solveSudoku(self):
         # _start = time.time()
 
-        colorImg = cv2.resize(self.__originalImg, (550, 550), interpolation=cv2.INTER_CUBIC)
-        grayImg, binaryImg = self.__applyThresolding(colorImg)
+        # colorImg = cv2.resize(self.__originalImg, (550, 550), interpolation=cv2.INTER_CUBIC)
+        grayImg, binaryImg = self.__applyThresolding(self.__originalImg)
         contours, _ = cv2.findContours(binaryImg, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         boundry, endpoints = self.__getSudokuBoundry(contours)
 
@@ -143,12 +136,12 @@ class SudokuSolver:
         # self.__displayImg([["img", colorImg]])
 
         binaryImg = self.__cutSudokuFromImg(binaryImg, endpoints, boundry)
-        # boxes = self.__gridToBoxes(binaryImg)
+        boxes = self.__gridToBoxes(binaryImg)
 
         # print(f"{time.time()-_start} seconds")
 
-        self.__displayImg([["gray", grayImg], ["binaryImg", binaryImg]])
-        # self.__displayBoxes(boxes)
+        # self.__displayImg([["gray", grayImg], ["binaryImg", binaryImg]])
+        self.__displayBoxes(boxes)
 
 
 if __name__ == '__main__':
