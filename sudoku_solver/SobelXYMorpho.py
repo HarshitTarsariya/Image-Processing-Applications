@@ -47,7 +47,7 @@ class SudokuSolverPlay:
         cv2.drawContours(mask, [best_cnt], 0, 255, -1)
         cv2.drawContours(mask, [best_cnt], 0, 0, 2)
 
-        res = cv2.bitwise_and(img, mask)
+        res = img & mask
         return res
 
     def __findGridPoints(self, img):
@@ -65,7 +65,6 @@ class SudokuSolverPlay:
 
             dx = cv2.Sobel(img, cv2.CV_64F, 1, 0)
             dx = cv2.convertScaleAbs(dx)
-            # self.__displayImg([["sobel",dx],["img",img]])
             # cv2.normalize(dx, dx, 0, 255, cv2.NORM_MINMAX)
             _, close = cv2.threshold(dx, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
             close = cv2.morphologyEx(close, cv2.MORPH_DILATE, kernelx, iterations=1)
@@ -140,25 +139,24 @@ class SudokuSolverPlay:
             """
             centroids = np.array(centers, dtype=np.float32)
             c = centroids.reshape((100, 2))
-            c2 = c[np.argsort(c[:, 1])]
+            c2 = c[c[:, 1].argsort()]
 
-            b = np.vstack([c2[i * 10:(i + 1) * 10][np.argsort(c2[i * 10:(i + 1) * 10, 0])] for i in range(10)])
+            b = np.vstack([c2[i * 10:(i + 1) * 10][c2[i * 10:(i + 1) * 10, 0].argsort()] for i in range(10)])
             # bm = b.reshape((10, 10, 2))
             return b
 
         vertical = findVerticalLines(img)
         horizontal = findHorizotalLines(img)
-        whitecenters = cv2.bitwise_and(vertical, horizontal)
+        whitecenters = vertical & horizontal
         whitecenters = cv2.morphologyEx(whitecenters, cv2.MORPH_DILATE, None, iterations=1)
 
-        # centers = findCenters(whitecenters)
-        # sorted = sortCenters(centers)
-        # sorted = cv2.convertScaleAbs(sorted)
-        self.__displayImg([["img", img],
-                           ["vertical", vertical],
-                           ["horizontal", horizontal],
-                           ["whitecenters", whitecenters]])
-        return sorted
+        centers = findCenters(whitecenters)
+        centers = sortCenters(centers)
+        # self.__displayImg([["img", img],
+        #                    ["vertical", vertical],
+        #                    ["horizontal", horizontal],
+        #                    ["whitecenters", whitecenters]])
+        return centers
 
     def __displayImg(self, imges):
         """
@@ -183,7 +181,7 @@ class SudokuSolverPlay:
                 box = 255 - box
                 plt.imshow(box, 'gray')
                 plt.xticks([]), plt.yticks([])
-                cv2.imwrite(f"F:/PlayGround/sudoku/sudoku0/box{i * 9 + j}.jpg", box)
+                # cv2.imwrite(f"F:/PlayGround/sudoku/sudoku0/box{i * 9 + j}.jpg", box)
         plt.show()
 
     def solveSudoku(self):
@@ -191,7 +189,7 @@ class SudokuSolverPlay:
         masked = self.__maskSudoku(gray)
         centers = self.__findGridPoints(masked)
 
-        # self.__extractImages(centers, masked)
+        self.__extractImages(centers, masked)
         # for i, centr in enumerate(centers, start=0):
         #     cv2.circle(self.__originalImg, (centr[0], centr[1]), 3, (255, 0, 0), -1)
         #     cv2.putText(self.__originalImg, f'{i}', (centr[0], centr[1]), cv2.FONT_HERSHEY_SIMPLEX,
@@ -200,6 +198,6 @@ class SudokuSolverPlay:
 
 
 if __name__ == '__main__':
-    colorImg = cv2.imread('../assets/images/sudoku/sudoku1.jpg')
+    colorImg = cv2.imread('../assets/images/sudoku/sudoku0.jpg')
     solver = SudokuSolverPlay(colorImg)
     solver.solveSudoku()

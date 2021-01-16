@@ -18,14 +18,10 @@ class SudokuSolver:
         """
         grayscal = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         filtered = cv2.bilateralFilter(grayscal, 1, 195, 195)
-        # brightImg = self.__adjustBrightness(grayscal)
-
         # img = cv2.medianBlur(img, 1)
         binary = cv2.adaptiveThreshold(grayscal, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
                                        cv2.THRESH_BINARY_INV, 19, 2)
-        # self.__displayImg([["colorImg", colorImg], ["grayscal", grayscal],
-        #                    ["filtered", filtered],["brightImg",brightImg]])
-        return filtered, binary
+        return 255 - filtered, binary
 
     def __getSudokuBoundry(self, contours):
         """
@@ -35,13 +31,9 @@ class SudokuSolver:
         ans, max_area, endpoints = [], 0, np.array([])
         for curr in contours:
             currArea = cv2.contourArea(curr)
-            # if currArea > 50:
-            #     ans.append(curr)
-
             if currArea > 1000:
                 peri = cv2.arcLength(curr, True)
                 approx = cv2.approxPolyDP(curr, 0.01 * peri, True)
-                # print(approx.shape)
                 if approx.shape[0] == 4 and currArea > max_area:
                     ans = [curr]
                     max_area, endpoints = currArea, approx
@@ -51,31 +43,35 @@ class SudokuSolver:
                 points = points.reshape((4, 2))
             except:
                 return points
-            points = sorted(points, key=lambda x: x[1])
-            if points[0][0] > points[1][0]:
-                points[0], points[1] = points[1], points[0]
-            if points[2][0] > points[3][0]:
-                points[2], points[3] = points[3], points[2]
-            points = np.array(points)
+            points = points[points[:, 1].argsort()]
+            points[:2] = points[:2][points[:2, 0].argsort()]
+            points[2:4] = points[2:4][points[2:4, 0].argsort()]
             return points
 
         return ans, reorderPoints(endpoints)
 
-    def __cutSudokuFromImg(self, img, points, contours):
+    def __cutSudokuFromImg(self, img, points):
         """
         :param img: Binary Image of Sudoku
         :param points: 4 endpoints of Sudoku
-        :param contours: contours to be preserved
         :return: cropped grid from image
         """
         pts1 = np.float32(points)
-        pts2 = np.float32([[0, 0], [549, 0], [0, 549], [549, 549]])
+        MaxH = float(int(max(np.linalg.norm(points[0] - points[2]), np.linalg.norm(points[1] - points[3]))))
+        MaxW = float(int(max(np.linalg.norm(points[0] - points[1]), np.linalg.norm(points[2] - points[3]))))
+        Hmod, Wmod = MaxH % 9, MaxW % 9
+        MaxH += -Hmod if Hmod < 9 - Hmod else 9 - Hmod
+        MaxW += -Wmod if Wmod < 9 - Wmod else 9 - Wmod
+        pts2 = np.float32([
+            [0, 0],
+            [MaxW - 1, 0],
+            [0, MaxH - 1],
+            [MaxW - 1, MaxH - 1]
+        ])
         M = cv2.getPerspectiveTransform(pts1, pts2)
-        dst = cv2.warpPerspective(img, M, (549, 549))
+        print(pts1, pts2, M)
+        dst = cv2.warpPerspective(img, M, (int(MaxW),int(MaxH)))
 
-        # h, w = img.shape[:2]
-        # mask = np.zeros((h + 2, w + 2), np.uint8)
-        # cv2.floodFill(img, mask, (0, 0), 0)
         return dst
 
     def __displayBoxes(self, boxes):
@@ -88,8 +84,7 @@ class SudokuSolver:
                 box = boxes[i * 9 + j]
                 plt.imshow(box, 'gray')
                 plt.xticks([]), plt.yticks([])
-                cv2.imwrite(f"F:/pycharm/LearnAI/assets/images/sudoku/sudoku0/box{i * 9 + j}.jpg", boxes[i * 9 + j])
-
+                # cv2.imwrite(f"F:/pycharm/LearnAI/assets/images/sudoku/sudoku0/box{i * 9 + j}.jpg", boxes[i * 9 + j])
         plt.show()
 
     def __gridToBoxes(self, grid):
@@ -125,26 +120,17 @@ class SudokuSolver:
         cv2.waitKey(0)
 
     def solveSudoku(self):
-        # _start = time.time()
 
-        # colorImg = cv2.resize(self.__originalImg, (550, 550), interpolation=cv2.INTER_CUBIC)
         grayImg, binaryImg = self.__applyThresolding(self.__originalImg)
         contours, _ = cv2.findContours(binaryImg, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         boundry, endpoints = self.__getSudokuBoundry(contours)
-
-        # cv2.drawContours(colorImg, boundry, -1, (0, 0, 255), 2)
-        # self.__displayImg([["img", colorImg]])
-
-        binaryImg = self.__cutSudokuFromImg(binaryImg, endpoints, boundry)
-        boxes = self.__gridToBoxes(binaryImg)
-
-        # print(f"{time.time()-_start} seconds")
-
-        # self.__displayImg([["gray", grayImg], ["binaryImg", binaryImg]])
+        grayImg = self.__cutSudokuFromImg(grayImg, endpoints)
+        # self.__displayImg([["img",grayImg]])
+        boxes = self.__gridToBoxes(grayImg)
         self.__displayBoxes(boxes)
 
 
 if __name__ == '__main__':
-    colorImg = cv2.imread('../assets/images/sudoku/sudoku0.jpg')
+    colorImg = cv2.imread('../assets/images/sudoku/sudoku9.jpg')
     solver = SudokuSolver(colorImg)
     solver.solveSudoku()
