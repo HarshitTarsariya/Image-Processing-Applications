@@ -2,6 +2,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from tensorflow.keras.models import load_model
+from config import ROOT_DIR
 
 class Gridder:
 
@@ -227,6 +228,6 @@ class Gridder:
 
 
 if __name__ == '__main__':
-    img=cv2.imread('../../SDP/Image-Processing-Applications/sudokus/sudoku7.jpg')
+    img=cv2.imread(ROOT_DIR+'/Flask-Server/Sudoku_Solver/Sudoku/sudoku_7.jpg')
     ext = Gridder(img)
     ext.Solver()

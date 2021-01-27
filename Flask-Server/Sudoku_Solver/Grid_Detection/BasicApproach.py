@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import scipy.ndimage
 from scipy import ndimage
-
+from config import ROOT_DIR
 
 class SudokuSolver:
     def __init__(self, image):
@@ -132,6 +132,6 @@ class SudokuSolver:
         self.__displayBoxes(boxes)
 
 if __name__ == '__main__':
-    colorImg = cv2.imread('./sudokus/sudoku12.jpg')
+    colorImg = cv2.imread(ROOT_DIR+'Flask-Server/Sudoku_Solver/Sudoku/sudoku_12.jpg')
     solver = SudokuSolver(colorImg)
     solver.solveSudoku()

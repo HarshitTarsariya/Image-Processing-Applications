@@ -4,6 +4,7 @@ import math
 from matplotlib import pyplot as plt
 from tensorflow.keras.models import load_model
 from ..SudokuSolve import SudokuSolve
+from config import ROOT_DIR
 
 class ImageUtil:
     def __init__(self):
@@ -144,7 +145,7 @@ class ImageUtil:
         # plt.show()
         img_digits = np.array(img_digits).astype(np.float32)
         img_digits_np = img_digits/255.0
-        model = load_model('../Models/digitalusingsmall2.h5')
+        model = load_model(ROOT_DIR+'/Flask-Server/Sudoku_Solver/Models/digitalusingsmall2.h5')
         preds_proba = model.predict(img_digits_np)
 
         preds = []
@@ -405,6 +406,5 @@ class SudokuSolver:
 
 if __name__ == '__main__':
     for i in range(12,13):
-        solver = SudokuSolver(cv2.imread(f'./sudokus/sudoku{i}.jpg'),
-                                         f"sudoku{i}.jpg")
+        solver = SudokuSolver(cv2.imread(ROOT_DIR+f'Flask-Server/Sudoku_Solver/Sudoku/sudoku_{i}.jpg'))
         solver.solveSudoku()

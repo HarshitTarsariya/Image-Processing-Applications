@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 from PIL import Image, ImageFilter
 import requests
 from tensorflow.keras.models import load_model
+from config import ROOT_DIR
 
 class ImageUtil:
     def __init__(self):
@@ -235,7 +236,7 @@ class ImageUtil:
         std=img_digits.std().astype(np.float32)
         img_digits=(img_digits-mean)/std
         img_digits_np = img_digits
-        model = load_model('../Models/Number1.h5')
+        model = load_model(ROOT_DIR+'/Flask-Server/Sudoku_Solver/Models/Number1.h5')
         preds_proba = model.predict(img_digits_np)
 
         preds = []
@@ -564,7 +565,7 @@ class SudokuSolver:
 
 
 imgUrls=[
-    "../sudoku/sudoku1.jpg",
+    ROOT_DIR+"Flask-Server/Sudoku/sudoku_1.jpg",
     "https://i.ibb.co/Kr4j1Ld/sudoku1.jpg",
     "https://i.ibb.co/Dg5NYxH/sudoku3.jpg",
     "https://i.ibb.co/9vHjQqg/sudoku4.jpg",

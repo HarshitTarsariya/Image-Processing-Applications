@@ -2,6 +2,8 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import os
+from config import ROOT_DIR
+
 
 def preProcess(img):
     """
@@ -167,10 +169,10 @@ def extractImages(centers, img,k):
 
 if __name__=="__main__":
 
-    PATH='./sudokus'
+    PATH='Flask-Server/Sudoku_Solver/Sudoku'
     k=0
     # for filename in os.listdir(PATH):
-    img = cv2.imread(os.path.join(PATH, 'sudoku0.jpg'))
+    img = cv2.imread(ROOT_DIR+PATH+'sudoku_0.jpg')
 
     gray=preProcess(img)
     # if img is None:

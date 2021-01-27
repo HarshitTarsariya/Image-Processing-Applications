@@ -1,7 +1,7 @@
 from flask import Flask,request,jsonify
 import cv2
 import os
-#importing ../Sudoku-Solver/Grid Detection/SudokuSolver.py
+from .Sudoku_Solver.Grid_Detection.Optimised import SudokuSolver
 
 app=Flask(__name__)
 
