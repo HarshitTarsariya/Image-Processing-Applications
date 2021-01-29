@@ -19,28 +19,38 @@ class _SudokuSolverState extends State<SudokuSolver> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Sudoku Solver"),
-        centerTitle: true,
+        centerTitle: false,
       ),
-      body: Column(
+      body: ListView(
         children: [
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
           ),
           Container(
             child: image == null
-                ? Text("Select Image",
-                    style:
-                        TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold))
-                : _showGrid == false
-                    ? Container(
-                        child: Image.file(image),
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width,
-                      )
-                    : ShowGrid(context),
+                ? Center(
+                    child: Text("Select Image",
+                        style: TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.bold)),
+                  )
+                : Container(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.green),
+                      ),
+                      child: Image.file(image),
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width,
+                  ),
           ),
           SizedBox(
-            height: 10.0,
+            height: MediaQuery.of(context).size.height * 0.05,
+          ),
+          _showGrid == true ? ShowGrid(context) : Container(),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.05,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -87,11 +97,15 @@ class _SudokuSolverState extends State<SudokuSolver> {
               ),
             ],
           ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.05,
+          ),
         ],
       ),
     );
   }
 
+  // ignore: non_constant_identifier_names
   ShowGrid(context) {
     return Column(
         children: List.generate(

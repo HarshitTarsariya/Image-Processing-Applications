@@ -14,14 +14,13 @@ def Sudoku():
         upload.save(upload.filename)
 
         img=cv2.imread(upload.filename)
+        os.remove(upload.filename)
+
         solver=SudokuSolver(img)
         solvedSudoku=solver.solveSudoku()
 
-        os.remove(upload.filename)
-
-        arr=[[int(solvedSudoku[i][j]) for j in range(9)]for i in range(9)]
-        print(arr)
-        d={'data':arr}
+        print(solvedSudoku)
+        d={'data':solvedSudoku}
 
         return jsonify(d)
 

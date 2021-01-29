@@ -401,7 +401,7 @@ class SudokuSolver:
 
         grid=self.__util.display81Boxes(boxes)
 
-        return  SudokuSolve().solver(grid)
+        return  SudokuSolve().solver(grid).tolist()
 
 
 if __name__ == '__main__':
