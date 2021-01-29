@@ -12,14 +12,14 @@ from PIL import Image
 class MathDataSet:
     def getMathDictionary(self):
         """
-        :return: Returns the dictionary of dataset elements containing digits and operators
+        :return: Returns the dictionary of data set elements containing digits and operators
         """
         mathDictionary = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4",
                           5: "5", 6: "6", 7: "7", 8: "8", 9: "9",
                           10: "-", 11: "+", 12: "times"}
         return mathDictionary
 
-    def __loadImagesFromFolder(self, folder):
+    def loadImagesFromFolder(self, folder):
         """
         # load images from data set folder
         :param folder
@@ -63,12 +63,12 @@ class MathDataSet:
         mathDictionary = self.getMathDictionary()
 
         # Not used within loop so as to initialize data array
-        data = self.__loadImagesFromFolder(dataSetPath + "0")
+        data = self.loadImagesFromFolder(dataSetPath + "0")
         for i in range(0, len(data)):
             data[i] = np.append(data[i], ["0"])
         # print(len(data))
         for key in range(1, len(mathDictionary)):
-            data_aux = self.__loadImagesFromFolder(dataSetPath + mathDictionary.get(key))
+            data_aux = self.loadImagesFromFolder(dataSetPath + mathDictionary.get(key))
             for i in range(0, len(data_aux)):
                 data_aux[i] = np.append(data_aux[i], [key])
             data = np.concatenate((data, data_aux))
@@ -82,4 +82,5 @@ class MathDataSet:
 if __name__ == '__main__':
     # Call storeDataSetIntoCsv() method from MathDataSet class
     mathDataSet = MathDataSet()
-    mathDataSet.storeDataSetIntoCsv("F:/FUN_LEARN/AI/OpenCV/MathDataset/")
+    mathDataSet.storeDataSetIntoCsv("F:/FUN_LEARN/AI/OpenCV/MathDataset/train/")
+    # mathDataSet.getDataSet()

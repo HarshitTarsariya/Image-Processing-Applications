@@ -1,9 +1,11 @@
 import cv2
 import numpy as np
-from numpy import bool_
 
+from image_utility import EquationSolver
 from math_data_set import MathDataSet
-from keras.models import model_from_json, load_model
+from keras.models import model_from_json
+from tensorflow.keras.models import load_model
+from matplotlib import pyplot as plt
 
 class MathEquationSolver:
     def __init__(self, mathEquationImg):
@@ -12,21 +14,12 @@ class MathEquationSolver:
         """
         self.__mathEquationImg = mathEquationImg
 
-    def getModel(self):
-        # Get the model from the json file
-        json_file = open('model_final.json', 'r')
-        loaded_model_json = json_file.read()
-        json_file.close()
-        loaded_model = model_from_json(loaded_model_json)
-        # Load weights into new model
-        loaded_model.load_weights('model_final.h5')
-        print("Model loaded from disk")
-        loaded_model.save('model_final.hdf5')
-        loaded_model = load_model('model_final.hdf5')
+    def __getModel(self):
+        loaded_model = load_model('model_final.h5')
         return loaded_model
 
-    def showMathEquationImage(self, img):
-        cv2.imshow("Math Equation", img)
+    def __showMathEquationImage(self, title, img):
+        cv2.imshow(title, img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
@@ -81,58 +74,83 @@ class MathEquationSolver:
         print("final_rect", final_rect)
         return final_rect
 
-    def getTrainData(self, thresh, final_rect):
+    def __getTrainData(self, thresh, final_rect):
         train_data = []
         for r in final_rect:
-            x = r[0]
-            y = r[1]
-            w = r[2]
-            h = r[3]
+            x, y, w, h = r[0], r[1], r[2], r[3]
             im_crop = thresh[y:y + h + 10, x:x + w + 10]
             im_resize = cv2.resize(im_crop, (28, 28))
-            cv2.imshow("Elements", im_resize)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
-            # im_resize = np.reshape(im_resize, (28, 28, 1))
             train_data.append(im_resize)
         return train_data
 
-    def processImage(self):
-        img = cv2.imread(self.__mathEquationImg, cv2.IMREAD_GRAYSCALE)
+    def __showDataExtracted(self, elements, final_rect, thresh):
+        i = 1
+        for r in final_rect:
+            x, y, w, h = r[0], r[1], r[2], r[3]
+            im_crop = thresh[y:y + h + 10, x:x + w + 10]
+            im_resize = cv2.resize(im_crop, (28, 28))
+            plt.subplot(3, 4, i), plt.imshow(im_resize, 'gray')
+            plt.title(elements[i-1])
+            plt.xticks([]), plt.yticks([])
+            i += 1
+        plt.show()
+
+    def __processImage(self, img):
+        if img is None:
+            img = cv2.imread(self.__mathEquationImg, cv2.IMREAD_GRAYSCALE)
+        equString = ""
         if img is not None:
-            self.showMathEquationImage(img)
-            img = cv2.bitwise_not(img)  #Invert the image
+            self.__showMathEquationImage("Math Equation", img)
+            img = cv2.bitwise_not(img)  # Invert the image
             ret, thresh = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
             contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             cnt = sorted(contours, key=lambda ctr: cv2.boundingRect(ctr)[0])
             final_rect = self.__manageRectangle(cnt, thresh)
 
-            train_data = self.getTrainData(thresh, final_rect)
-            loaded_model = self.getModel()
+            train_data = self.__getTrainData(thresh, final_rect)
+            loaded_model = self.__getModel()
             mathDataSet = MathDataSet()
             mathDictionary = mathDataSet.getMathDictionary()
-            equString = ""
+            elements = []
             for i in range(len(train_data)):
                 train_data[i] = np.array(train_data[i])
-                train_data[i] = train_data[i].reshape((1,28,28,1))
-                # Deprecated method
-                # result = loaded_model.predict_classes(train_data[i])
+                train_data[i] = train_data[i].reshape((1, 28, 28, 1))
                 result = np.argmax(loaded_model.predict(train_data[i]), axis=-1)
                 value = mathDictionary.get(result[0])
+                elements.append(value)
                 if value == "times":
                     equString += '*'
                 else:
                     equString += value
-            print("String : ",equString)
+            self.__showDataExtracted(elements, final_rect, thresh)
+            print("String : ", equString)
         return equString
 
+    def __preprocessImage(self):
+        solver = EquationSolver()
+        img = cv2.imread(self.__mathEquationImg)
+        if img is not None:
+            img = solver.solveEq(img)
+            img = cv2.bitwise_not(img)
+            return img
+
     def solveEquation(self):
-        equString = self.processImage()
-        if equString is not None:
-            print(eval(equString))
+        # img = self.__preprocessImage()
+        equString = self.__processImage(img=None)
+        if equString is not None or equString == "":
+            value = eval(equString)
+            return equString + " = " + str(value)
         else:
-            print("Invalid Input")
+            return "Invalid Input"
+
 
 if __name__ == '__main__':
-    mathEquation = MathEquationSolver("assets/images/test0.png")
-    mathEquation.solveEquation()
+    # For paint images
+    for i in range(0, 9):
+        mathEquation = MathEquationSolver(f"assets/images/paint/test{i}.png")
+        print(mathEquation.solveEquation())
+
+    # For handwritten blank background images
+    # for i in range(1, 17):
+    #     mathEquation = MathEquationSolver(f"assets/images/blank/blank{i}.png")
+    #     print(mathEquation.solveEquation())
