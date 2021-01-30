@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:ImageClassification/views/MathEquation.dart';
 import 'package:ImageClassification/widgets/wave.dart';
 import 'package:flutter/material.dart';
 import './SudokuSolver.dart';
@@ -25,7 +26,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     // TODO: implement initState
-    functions = ['SudokuSolver', 'ImageToText'];
+    functions = ['SudokuSolver', 'MathEquation', 'ImageToText'];
     super.initState();
   }
 
@@ -75,6 +76,8 @@ class Function extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           if (this.function == 'SudokuSolver') {
             return SudokuSolver();
+          } else if (this.function == 'MathEquation') {
+            return MathEquation();
           }
         }));
       },

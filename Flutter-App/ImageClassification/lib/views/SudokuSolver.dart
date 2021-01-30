@@ -29,9 +29,11 @@ class _SudokuSolverState extends State<SudokuSolver> {
           Container(
             child: image == null
                 ? Center(
-                    child: Text("Select Image",
-                        style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      "Select Image",
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold),
+                    ),
                   )
                 : Container(
                     padding: EdgeInsets.only(left: 10, right: 10),
