@@ -167,7 +167,7 @@ class _SudokuSolverState extends State<SudokuSolver> {
       _showGrid = false;
       image = img;
     });
-    var res = await uploadImage(img.path, "http://192.168.1.107:5000/Sudoku");
+    var res = await uploadImage(img.path, "http://192.168.1.105:5000/Sudoku");
     var response = await http.Response.fromStream(res);
     var data = jsonDecode(response.body);
     setState(() {
@@ -193,7 +193,7 @@ class _SudokuSolverState extends State<SudokuSolver> {
       image = img;
     });
 
-    var res = await uploadImage(img.path, "http://192.168.1.107:5000/Sudoku");
+    var res = await uploadImage(img.path, "http://192.168.1.105:5000/Sudoku");
     var response = await http.Response.fromStream(res);
     var data = jsonDecode(response.body);
     setState(() {

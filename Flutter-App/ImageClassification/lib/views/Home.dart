@@ -4,6 +4,7 @@ import 'package:ImageClassification/views/MathEquation.dart';
 import 'package:ImageClassification/widgets/wave.dart';
 import 'package:flutter/material.dart';
 import './SudokuSolver.dart';
+import 'Barcode.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     // TODO: implement initState
-    functions = ['SudokuSolver', 'MathEquation', 'ImageToText'];
+    functions = ['SudokuSolver', 'MathEquation', 'Barcode'];
     super.initState();
   }
 
@@ -78,6 +79,8 @@ class Function extends StatelessWidget {
             return SudokuSolver();
           } else if (this.function == 'MathEquation') {
             return MathEquation();
+          } else if (this.function == 'Barcode') {
+            return Barcode();
           }
         }));
       },

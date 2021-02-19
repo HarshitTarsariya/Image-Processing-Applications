@@ -1,15 +1,15 @@
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-class MathEquation extends StatefulWidget {
+class Barcode extends StatefulWidget {
   @override
-  _MathEquationState createState() => _MathEquationState();
+  _BarcodeState createState() => _BarcodeState();
 }
 
-class _MathEquationState extends State<MathEquation> {
+class _BarcodeState extends State<Barcode> {
   File image;
   bool _showSolution = false;
   var solution;
@@ -17,7 +17,7 @@ class _MathEquationState extends State<MathEquation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Math Equation"),
+        title: Text("Barcode"),
         centerTitle: false,
       ),
       body: ListView(
@@ -131,8 +131,7 @@ class _MathEquationState extends State<MathEquation> {
       _showSolution = false;
       image = img;
     });
-    var res =
-        await uploadImage(img.path, "http://192.168.1.105:5000/MathEquation");
+    var res = await uploadImage(img.path, "http://192.168.1.105:5000/Barcode");
     var response = await http.Response.fromStream(res);
     var data = jsonDecode(response.body);
     setState(() {
@@ -158,8 +157,7 @@ class _MathEquationState extends State<MathEquation> {
       image = img;
     });
 
-    var res =
-        await uploadImage(img.path, "http://192.168.1.105:5000/MathEquation");
+    var res = await uploadImage(img.path, "http://192.168.1.105:5000/Barcode");
     var response = await http.Response.fromStream(res);
     var data = jsonDecode(response.body);
     setState(() {

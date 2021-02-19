@@ -146,8 +146,8 @@ class MathEquationSolver:
 
 if __name__ == '__main__':
     # For paint images
-    for i in range(0, 9):
-        mathEquation = MathEquationSolver(f"assets/images/paint/test{i}.png")
+    for i in range(0, 1):
+        mathEquation = MathEquationSolver(f"./assets/images/paint/test{i}.png")
         print(mathEquation.solveEquation())
 
     # For handwritten blank background images
