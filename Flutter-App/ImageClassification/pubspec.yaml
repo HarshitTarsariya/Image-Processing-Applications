@@ -23,7 +23,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  image_picker: 0.6.3+1
+  firebase_core: ^0.7.0
+  image_picker: ^0.6.7+22
+  firebase_ml_vision: ^0.10.0
+  flutter_tts: ^2.1.0
+  font_awesome_flutter: ^8.11.0
+  speech_recognition: ^0.3.0+1
   http: ^0.12.2
   simple_animations: ^2.5.0
 
@@ -62,10 +67,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: tenali-rama
+      fonts:
+        - asset: fonts/TenaliRamakrishna-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
