@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ImageClassification/constants.dart' as Constants;
 
 class Barcode extends StatefulWidget {
   @override
@@ -63,7 +65,7 @@ class _BarcodeState extends State<Barcode> {
                 ),
                 color: Colors.green,
                 onPressed: () {
-                  fromCamera();
+                  pickImage(ImageSource.camera);
                 },
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
@@ -83,7 +85,7 @@ class _BarcodeState extends State<Barcode> {
                 ),
                 color: Colors.green,
                 onPressed: () {
-                  fromGallery();
+                  pickImage(ImageSource.gallery);
                 },
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
@@ -124,14 +126,31 @@ class _BarcodeState extends State<Barcode> {
     );
   }
 
-  Future fromGallery() async {
-    var img = await ImagePicker.pickImage(source: ImageSource.gallery);
-
+  Future pickImage(src) async {
+    var img = await ImagePicker.pickImage(source: src);
+    img = await ImageCropper.cropImage(
+        sourcePath: img.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Crop Image',
+            toolbarColor: Colors.grey,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ));
     setState(() {
       _showSolution = false;
       image = img;
     });
-    var res = await uploadImage(img.path, "http://192.168.1.105:5000/Barcode");
+    var res = await uploadImage(img.path, Constants.SERVER_URL + "Barcode");
     var response = await http.Response.fromStream(res);
     var data = jsonDecode(response.body);
     setState(() {
@@ -147,22 +166,5 @@ class _BarcodeState extends State<Barcode> {
     request.headers.addAll(headers);
     var res = await request.send();
     return res;
-  }
-
-  Future fromCamera() async {
-    var img = await ImagePicker.pickImage(source: ImageSource.camera);
-
-    setState(() {
-      _showSolution = false;
-      image = img;
-    });
-
-    var res = await uploadImage(img.path, "http://192.168.1.105:5000/Barcode");
-    var response = await http.Response.fromStream(res);
-    var data = jsonDecode(response.body);
-    setState(() {
-      solution = data['data'];
-      _showSolution = true;
-    });
   }
 }

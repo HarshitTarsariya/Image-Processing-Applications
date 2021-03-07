@@ -6,6 +6,7 @@ import 'package:ImageClassification/widgets/SpeechToText.dart';
 import 'package:ImageClassification/widgets/TextToSpeech.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TextAndSpeech extends StatefulWidget {
@@ -86,7 +87,27 @@ class _TextAndSpeechState extends State<TextAndSpeech> {
   }
 
   Future getImage(ImageSource src) async {
-    final pickedFile = await picker.getImage(source: src);
+    var pickedFile = await ImagePicker.pickImage(source: src);
+
+    pickedFile = await ImageCropper.cropImage(
+        sourcePath: pickedFile.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Crop Image',
+            toolbarColor: Colors.grey,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ));
+
     setState(() {
       _image = null;
       if (pickedFile != null) {
