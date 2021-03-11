@@ -1,4 +1,5 @@
 # Import Libraries
+import math
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as ply
@@ -16,8 +17,21 @@ class MathDataSet:
         """
         mathDictionary = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4",
                           5: "5", 6: "6", 7: "7", 8: "8", 9: "9",
-                          10: "-", 11: "+", 12: "times"}
+                          10: "-", 11: "+", 12: "times", 13: "div",
+                          14: "(", 15: ")", 16: "dot", 17: "sqrt"}
         return mathDictionary
+
+    def getMathOperatorDiary(self):
+        """
+        :return: Returns the operators dictionary for eval()
+        """
+        operatorDiary = {
+            "sqrt": math.sqrt,
+            # "sin": math.sin,
+            # "cos": math.cos,
+            # "tan": math.tan
+        }
+        return operatorDiary
 
     def loadImagesFromFolder(self, folder):
         """
@@ -81,4 +95,3 @@ if __name__ == '__main__':
     # Call storeDataSetIntoCsv() method from MathDataSet class
     mathDataSet = MathDataSet()
     mathDataSet.storeDataSetIntoCsv("F:/FUN_LEARN/AI/OpenCV/MathDataset/train/")
-    # mathDataSet.getDataSet()
