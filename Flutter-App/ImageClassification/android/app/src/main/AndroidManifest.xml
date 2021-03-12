@@ -38,6 +38,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        
+        <!-- Activity for the Crop functionality -->
         <activity
         android:name="com.yalantis.ucrop.UCropActivity"
         android:screenOrientation="portrait"

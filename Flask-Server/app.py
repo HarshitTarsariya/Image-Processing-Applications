@@ -1,6 +1,9 @@
 from flask import Flask,request,jsonify
 import cv2
 import os
+import json
+
+from .Translator.translate import Translator
 from .Sudoku_Solver.Grid_Detection.Optimised import SudokuSolver
 from .Math_Equation_Solver.math_equation_solver import MathEquationSolver
 from .Barcode_Product.barcode_to_product_details import BarcodeToProductDetails
@@ -63,6 +66,21 @@ def Barcode():
         d={'data':details}
 
         return jsonify(d)
+
+@app.route('/Translate',methods=['POST'])
+def Translate():
+    # takes body as simple string
+    a=request.get_data(as_text=True)
+
+    # deserializing string to json
+    js=json.loads(a)
+
+    trans=Translator()
+    data=trans.translate(str(js['from']),str(js['to']),str(js['text']))
+    d={'data':data}
+
+    return jsonify(d)
+
 
 if __name__=="main":
     app.run(debug=True)

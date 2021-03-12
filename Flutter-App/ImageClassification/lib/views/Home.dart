@@ -6,6 +6,8 @@ import 'package:ImageClassification/widgets/wave.dart';
 import 'package:flutter/material.dart';
 import './SudokuSolver.dart';
 import 'Barcode.dart';
+import '../widgets/Translate.dart';
+import 'TranslateHome.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -28,7 +30,13 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     // TODO: implement initState
-    functions = ['SudokuSolver', 'MathEquation', 'Barcode', 'TextAndSpeech'];
+    functions = [
+      'SudokuSolver',
+      'MathEquation',
+      'Barcode',
+      'TextAndSpeech',
+      'Translate'
+    ];
     super.initState();
   }
 
@@ -84,6 +92,8 @@ class Function extends StatelessWidget {
             return Barcode();
           } else if (this.function == 'TextAndSpeech') {
             return TextAndSpeech();
+          } else if (this.function == 'Translate') {
+            return TranslateHome();
           }
         }));
       },
