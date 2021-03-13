@@ -1,9 +1,11 @@
+import 'dart:async';
+
+import 'package:ImageClassification/style/loadingScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import './views/Home.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -13,37 +15,41 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    waitingFunc();
+  }
 
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  bool waiter = false;
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _initialization,
       builder: (context, snapshot) {
         return MaterialApp(
-          title: 'Image Processing Applications',
+          title: 'Image Processing App',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            primarySwatch: Colors.blueGrey,
+            primarySwatch: Colors.lightBlue,
+            fontFamily: "Capriola",
           ),
-          home: snapshot.connectionState == ConnectionState.done
+          home: (snapshot.connectionState == ConnectionState.done &&
+                  waiter == true)
               ? Home()
-              : Loading(),
+              : LoadingScreen(image: 'ai.png', message: 'Image Processing App'),
         );
       },
     );
   }
-}
 
-class Loading extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(10),
-        alignment: Alignment.center,
-        child: Text('loading'),
-      ),
-    );
+  waitingFunc() async {
+    await Timer(Duration(seconds: 3), () {
+      setState(() {
+        waiter = true;
+      });
+    });
   }
 }

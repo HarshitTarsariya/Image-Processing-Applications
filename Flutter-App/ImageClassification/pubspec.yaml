@@ -27,6 +27,7 @@ dependencies:
   image_picker: ^0.6.7+22
   firebase_ml_vision: ^0.10.0
   flutter_tts: ^2.1.0
+  flutter_spinkit: ^4.1.2+1
   font_awesome_flutter: ^8.11.0
   speech_recognition: ^0.3.0+1
   http: ^0.12.2
@@ -54,8 +55,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-  - assets/
-  #   - images/a_dot_ham.jpeg
+    - assets/images/static/
+    - assets/images/loading/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -69,9 +70,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: tenali-rama
+    - family: Capriola
       fonts:
-        - asset: fonts/TenaliRamakrishna-Regular.ttf
+        - asset: assets/fonts/Capriola-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

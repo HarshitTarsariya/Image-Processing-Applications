@@ -38,8 +38,6 @@ class MathDataSet:
                 # Sort the contours based on the key of rectangles top left corner x dimension
                 cnt = sorted(contours, key=lambda ctr: cv2.boundingRect(ctr)[0])
                 # Find a rectangle of maximum width and height from the cnt list
-                # width = int(28)
-                # height = int(28)
                 maximumArea = 0
                 for c in cnt:
                     tl_x, tl_y, width, height = cv2.boundingRect(c)

@@ -40,8 +40,8 @@ def MathEquation():
         img=cv2.imread(upload.filename)
         os.remove(upload.filename)
 
-        solver=MathEquationSolver(img)
-        equation=solver.solveEquation()
+        solver=MathEquationSolver()
+        equation=solver.solveEquation(img)
 
         print(equation)
         d={'data':equation}
