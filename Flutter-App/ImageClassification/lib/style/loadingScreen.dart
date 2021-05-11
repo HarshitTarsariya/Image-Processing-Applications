@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+// import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen extends StatelessWidget {
   String image;
@@ -8,15 +8,15 @@ class LoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spinkit = SpinKitWave(
-      itemBuilder: (BuildContext context, int index) {
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-        );
-      },
-    );
+    // final spinkit = SpinKitWave(
+    //   itemBuilder: (BuildContext context, int index) {
+    //     return DecoratedBox(
+    //       decoration: BoxDecoration(
+    //         color: Colors.white,
+    //       ),
+    //     );
+    //   },
+    // );
 
     return Scaffold(
       backgroundColor: Colors.lightBlue[900],

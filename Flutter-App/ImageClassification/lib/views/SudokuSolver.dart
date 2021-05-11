@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ImageClassification/widgets/Loading.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -52,7 +53,11 @@ class _SudokuSolverState extends State<SudokuSolver> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
           ),
-          _showGrid == true ? ShowGrid(context) : Container(),
+          _showGrid == true
+              ? ShowGrid(context)
+              : image != null
+                  ? LoadingOfResponse()
+                  : Container(),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
           ),

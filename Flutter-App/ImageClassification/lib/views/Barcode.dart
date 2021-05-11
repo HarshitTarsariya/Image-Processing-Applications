@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:ImageClassification/widgets/Loading.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -51,7 +52,11 @@ class _BarcodeState extends State<Barcode> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
           ),
-          _showSolution == true ? ShowSolution() : Container(),
+          _showSolution == true
+              ? ShowSolution()
+              : image != null
+                  ? LoadingOfResponse()
+                  : Container(),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
           ),

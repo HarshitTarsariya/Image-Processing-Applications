@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ImageClassification/widgets/Loading.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,11 @@ class _MathEquationState extends State<MathEquation> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
           ),
-          _showSolution == true ? ShowSolution() : Container(),
+          _showSolution == true
+              ? ShowSolution()
+              : image != null
+                  ? LoadingOfResponse()
+                  : Container(),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.05,
           ),
